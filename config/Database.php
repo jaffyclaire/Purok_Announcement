@@ -4,10 +4,10 @@ session_start();
 
 class Database
 {
-    private $host = "localhost";
-    private $db_name = "Purok_Announcement_db";
-    private $username = "root";
-    private $password = "";
+    private $host = "sql103.infinityfree.com";
+    private $db_name = "if0_43265274_purok_announcement_db";
+    private $username = "if0_43265274";
+    private $password = "malabat5687";
     private $charset = "utf8mb4";
     public $conn;
 
