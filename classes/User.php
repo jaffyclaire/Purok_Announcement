@@ -19,7 +19,7 @@ class User
         return $stmt->fetchAll();
     }
 
-        public function registerUser($first_name, $last_name, $email, $password, $role)
+    public function registerUser($first_name, $last_name, $email, $password)
     {
         // Check if email already exists
         $checkQuery = "SELECT user_id FROM {$this->table} WHERE email = :email LIMIT 1";
@@ -32,6 +32,7 @@ class User
         }
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $role = 'Resident';
 
         $query = "INSERT INTO {$this->table} (first_name, last_name, email, password, role)
                   VALUES (:first_name, :last_name, :email, :password, :role)";

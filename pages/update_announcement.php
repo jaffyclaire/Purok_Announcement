@@ -3,16 +3,12 @@ require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../config/require_officer.php';
 require_once __DIR__ . '/../classes/Announcement.php';
 require_once __DIR__ . '/../classes/Category.php';
-require_once __DIR__ . '/../classes/User.php';
 
 $database = new Database();
 $db = $database->connect();
 
 $category = new Category($db);
 $categories = $category->getAllCategories();
-
-$userModel = new User($db);
-$users = $userModel->getAllUsers();
 
 $announcement = new Announcement($db);
 
@@ -29,14 +25,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $announcement->details     = $_POST['details'] ?? '';
     $announcement->category_id = $_POST['category_id'] ?? null;
     $announcement->is_urgent   = isset($_POST['is_urgent']) ? 1 : 0;
-    $announcement->user_id     = $_POST['user_id'] ?? null;
+    $announcement->user_id     = $_SESSION['user_id'];
     $announcement->status      = $_POST['status'] ?? 'Active';
 
-    if ($announcement->updateAnnouncement($id)) {
+    try {
+        $announcement->updateWithNotifications($id, $_SESSION['user_id']);
         header("Location: view_announcements.php?updated=1");
         exit;
-    } else {
-        $message = "Failed to update the announcement. Please try again.";
+    } catch (Throwable $e) {
+        error_log('Announcement update transaction failed: ' . $e->getMessage());
+        $message = "Failed to update the announcement and notify users. No changes were saved.";
     }
 }
 
@@ -80,18 +78,6 @@ require_once 'header.php';
                                 <option value="<?php echo $cat['category_id']; ?>"
                                     <?php echo ($cat['category_id'] == $record['category_id']) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($cat['category_name']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label fw-semibold">Posted By</label>
-                        <select name="user_id" class="form-select" required>
-                            <?php foreach ($users as $u): ?>
-                                <option value="<?php echo $u['user_id']; ?>"
-                                    <?php echo ($u['user_id'] == $record['user_id']) ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($u['first_name'] . ' ' . $u['last_name'] . ' (' . $u['role'] . ')'); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>

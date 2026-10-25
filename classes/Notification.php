@@ -47,7 +47,7 @@ class Notification
     // Get the most recent notifications for the dropdown, joined with announcement info
     public function getRecentForUser($user_id, $limit = 5)
     {
-        $query = "SELECT n.notification_id, n.is_read, n.sent_at, n.announcement_id,
+        $query = "SELECT n.notification_id, n.is_read, n.sent_at, n.announcement_id, n.message,
                          a.title, a.is_urgent
                   FROM {$this->table} n
                   JOIN announcements a ON n.announcement_id = a.announcement_id

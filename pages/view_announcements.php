@@ -48,6 +48,8 @@ function getInitials($name) {
     <div class="alert alert-success">Announcement updated successfully.</div>
 <?php elseif (isset($_GET['deleted'])): ?>
     <div class="alert alert-success">Announcement deleted successfully.</div>
+<?php elseif (isset($_GET['error']) && $_GET['error'] === 'delete_failed'): ?>
+    <div class="alert alert-danger">Announcement deletion failed. No changes were saved.</div>
 <?php endif; ?>
 
 <div class="feed mx-auto" style="max-width: 640px;">

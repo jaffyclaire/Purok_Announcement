@@ -11,10 +11,12 @@ $id = $_GET['id'] ?? null;
 if ($id) {
     $announcement = new Announcement($db);
 
-    if ($announcement->deleteAnnouncement($id)) {
+    try {
+        $announcement->deleteWithNotifications($id);
         header("Location: view_announcements.php?deleted=1");
         exit;
-    } else {
+    } catch (Throwable $e) {
+        error_log('Announcement deletion transaction failed: ' . $e->getMessage());
         header("Location: view_announcements.php?error=delete_failed");
         exit;
     }

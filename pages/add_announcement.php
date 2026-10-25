@@ -3,7 +3,6 @@ require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../config/require_officer.php';
 require_once __DIR__ . '/../classes/Announcement.php';
 require_once __DIR__ . '/../classes/Category.php';
-require_once __DIR__ . '/../classes/Notification.php';
 
 $database = new Database();
 $db = $database->connect();
@@ -28,15 +27,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = "Please fill in all required fields.";
         $messageType = "danger";
     } else {
-        $newId = $announcement->addAnnouncement();
-        if ($newId) {
-            $notification = new Notification($db);
-            $notification->createForAllUsers($newId, $_SESSION['user_id']);
-
+        try {
+            $announcement->createWithNotifications($_SESSION['user_id']);
             header("Location: view_announcements.php?added=1");
             exit;
-        } else {
-            $message = "Failed to save the announcement. Please try again.";
+        } catch (Throwable $e) {
+            error_log('Announcement creation transaction failed: ' . $e->getMessage());
+            $message = "Failed to save the announcement and notify users. No changes were saved.";
             $messageType = "danger";
         }
     }

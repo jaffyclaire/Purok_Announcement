@@ -19,8 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email      = trim($_POST['email'] ?? '');
     $password   = $_POST['password'] ?? '';
     $confirm    = $_POST['confirm_password'] ?? '';
-    $role       = $_POST['role'] ?? 'Resident';
-
     if (empty($first_name) || empty($last_name) || empty($email) || empty($password)) {
         $error = "Please fill in all fields.";
     } elseif ($password !== $confirm) {
@@ -28,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (strlen($password) < 6) {
         $error = "Password must be at least 6 characters.";
     } else {
-        $result = $userModel->registerUser($first_name, $last_name, $email, $password, $role);
+        $result = $userModel->registerUser($first_name, $last_name, $email, $password);
 
         if ($result === 'duplicate') {
             $error = "An account with that email already exists.";
@@ -77,14 +75,6 @@ require_once 'header.php';
                 <label class="form-label fw-semibold">Email</label>
                 <input type="email" name="email" class="form-control" required maxlength="45"
                        value="<?php echo htmlspecialchars($email); ?>">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Role</label>
-                <select name="role" class="form-select">
-                    <option value="Resident">Resident</option>
-                    <option value="Officer">Officer</option>
-                </select>
             </div>
 
             <div class="row">

@@ -262,7 +262,7 @@ if (!$isAuthPage && isset($_SESSION['user_id'])) {
                         <a href="view_announcements.php" class="notif-item <?php echo !$n['is_read'] ? 'unread' : ''; ?>">
                             <div>
                                 <?php if ($n['is_urgent']): ?>🔴 <?php endif; ?>
-                                <?php echo htmlspecialchars($n['title']); ?>
+                                <?php echo htmlspecialchars($n['message'] ?: $n['title']); ?>
                             </div>
                             <small><?php echo date('M d, g:i A', strtotime($n['sent_at'])); ?></small>
                         </a>

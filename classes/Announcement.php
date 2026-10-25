@@ -44,6 +44,47 @@ class Announcement
         return false;
     }
 
+    // TRANSACTION 1 - Create an announcement and notify every other user.
+    public function createWithNotifications($authorId)
+    {
+        try {
+            $this->conn->beginTransaction();
+
+            $query = "INSERT INTO {$this->table}
+                        (title, details, status, is_urgent, user_id, category_id)
+                      VALUES
+                        (:title, :details, :status, :is_urgent, :user_id, :category_id)";
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute([
+                ':title' => htmlspecialchars(strip_tags($this->title)),
+                ':details' => htmlspecialchars(strip_tags($this->details)),
+                ':status' => $this->status,
+                ':is_urgent' => (int) $this->is_urgent,
+                ':user_id' => (int) $authorId,
+                ':category_id' => (int) $this->category_id,
+            ]);
+
+            $announcementId = (int) $this->conn->lastInsertId();
+            if ($announcementId < 1) {
+                throw new RuntimeException('The announcement insert did not return an ID.');
+            }
+
+            $this->insertNotificationsForOtherUsers(
+                $announcementId,
+                $authorId,
+                'New announcement: ' . $this->title
+            );
+
+            $this->conn->commit();
+            return $announcementId;
+        } catch (Throwable $e) {
+            if ($this->conn->inTransaction()) {
+                $this->conn->rollBack();
+            }
+            throw $e;
+        }
+    }
+
     // READ (all)
     public function getAnnouncements()
     {
@@ -97,6 +138,55 @@ class Announcement
         return $stmt->execute();
     }
 
+    // TRANSACTION 2 - Update an announcement and notify every other user.
+    public function updateWithNotifications($id, $authorId)
+    {
+        try {
+            $this->conn->beginTransaction();
+
+            $check = $this->conn->prepare(
+                "SELECT announcement_id FROM {$this->table} WHERE announcement_id = :id FOR UPDATE"
+            );
+            $check->execute([':id' => (int) $id]);
+            if (!$check->fetchColumn()) {
+                throw new RuntimeException('The announcement no longer exists.');
+            }
+
+            $query = "UPDATE {$this->table}
+                      SET title = :title,
+                          details = :details,
+                          status = :status,
+                          is_urgent = :is_urgent,
+                          user_id = :user_id,
+                          category_id = :category_id
+                      WHERE announcement_id = :id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute([
+                ':title' => htmlspecialchars(strip_tags($this->title)),
+                ':details' => htmlspecialchars(strip_tags($this->details)),
+                ':status' => $this->status,
+                ':is_urgent' => (int) $this->is_urgent,
+                ':user_id' => (int) $authorId,
+                ':category_id' => (int) $this->category_id,
+                ':id' => (int) $id,
+            ]);
+
+            $this->insertNotificationsForOtherUsers(
+                (int) $id,
+                $authorId,
+                'Announcement updated: ' . $this->title
+            );
+
+            $this->conn->commit();
+            return true;
+        } catch (Throwable $e) {
+            if ($this->conn->inTransaction()) {
+                $this->conn->rollBack();
+            }
+            throw $e;
+        }
+    }
+
     // DELETE
     public function deleteAnnouncement($id)
     {
@@ -105,6 +195,50 @@ class Announcement
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
+    }
+
+    // TRANSACTION 3 - Delete an announcement's notifications and the announcement.
+    public function deleteWithNotifications($id)
+    {
+        try {
+            $this->conn->beginTransaction();
+
+            $deleteNotifications = $this->conn->prepare(
+                "DELETE FROM notifications WHERE announcement_id = :id"
+            );
+            $deleteNotifications->execute([':id' => (int) $id]);
+
+            $deleteAnnouncement = $this->conn->prepare(
+                "DELETE FROM {$this->table} WHERE announcement_id = :id"
+            );
+            $deleteAnnouncement->execute([':id' => (int) $id]);
+            if ($deleteAnnouncement->rowCount() !== 1) {
+                throw new RuntimeException('The announcement no longer exists.');
+            }
+
+            $this->conn->commit();
+            return true;
+        } catch (Throwable $e) {
+            if ($this->conn->inTransaction()) {
+                $this->conn->rollBack();
+            }
+            throw $e;
+        }
+    }
+
+    private function insertNotificationsForOtherUsers($announcementId, $authorId, $message)
+    {
+        $query = "INSERT INTO notifications
+                    (is_read, sent_at, announcement_id, user_id, message)
+                  SELECT 0, NOW(), :announcement_id, user_id, :message
+                  FROM users
+                  WHERE user_id <> :author_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([
+            ':announcement_id' => (int) $announcementId,
+            ':message' => $message,
+            ':author_id' => (int) $authorId,
+        ]);
     }
 
     // SEARCH
