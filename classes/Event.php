@@ -160,9 +160,14 @@ class Event
         try {
             $this->conn->beginTransaction();
 
-            $existing = $this->getEventById($id);
+            $check = $this->conn->prepare("SELECT event_id, created_by, image_path FROM {$this->table} WHERE event_id = :id FOR UPDATE");
+            $check->execute([':id' => (int) $id]);
+            $existing = $check->fetch();
             if (!$existing) {
                 throw new RuntimeException('The event no longer exists.');
+            }
+            if (empty($existing['created_by']) || (int)$existing['created_by'] !== (int)$authorId) {
+                throw new RuntimeException('You can only edit or delete your own posts.');
             }
 
             $imageRelPath = $existing['image_path'];
@@ -212,7 +217,7 @@ class Event
     }
 
     // TRANSACTION - event: Delete event and related notifications
-    public function deleteWithNotifications($id)
+    public function deleteWithNotifications($id, $authorId = null)
     {
         $fileToDelete = null;
 
@@ -220,8 +225,16 @@ class Event
         try {
             $this->conn->beginTransaction();
 
-            $existing = $this->getEventById($id);
-            if ($existing && !empty($existing['image_path'])) {
+            $check = $this->conn->prepare("SELECT event_id, created_by, image_path FROM {$this->table} WHERE event_id = :id FOR UPDATE");
+            $check->execute([':id' => (int) $id]);
+            $existing = $check->fetch();
+            if (!$existing) {
+                throw new RuntimeException('The event no longer exists.');
+            }
+            if ($authorId !== null && (empty($existing['created_by']) || (int)$existing['created_by'] !== (int)$authorId)) {
+                throw new RuntimeException('You can only edit or delete your own posts.');
+            }
+            if (!empty($existing['image_path'])) {
                 $fileToDelete = $existing['image_path'];
             }
 

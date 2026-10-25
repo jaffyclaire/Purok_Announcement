@@ -18,6 +18,18 @@ if (!$id) {
     exit;
 }
 
+$record = $announcement->getAnnouncementById($id);
+if (!$record) {
+    header("Location: view_announcements.php");
+    exit;
+}
+if (empty($record['user_id']) || (int)$record['user_id'] !== (int)$_SESSION['user_id']) {
+    http_response_code(403);
+    header("Location: view_announcements.php?error=forbidden");
+    exit;
+}
+$existingImages = $record['images'] ?? [];
+
 $message = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -35,17 +47,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: view_announcements.php?updated=1");
         exit;
     } catch (Throwable $e) {
+        if ($e->getMessage() === 'You can only edit or delete your own posts.') {
+            http_response_code(403);
+            header("Location: view_announcements.php?error=forbidden");
+            exit;
+        }
         error_log('Announcement update transaction failed: ' . $e->getMessage());
         $message = $e->getMessage() ?: "Failed to update the announcement. No changes were saved.";
     }
 }
-
-$record = $announcement->getAnnouncementById($id);
-if (!$record) {
-    header("Location: view_announcements.php");
-    exit;
-}
-$existingImages = $record['images'] ?? [];
 
 require_once 'header.php';
 ?>

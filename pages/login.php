@@ -30,8 +30,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+$pageTitle = "PurokInform - Log in";
 require_once 'header.php';
 ?>
+<!-- Favicon links (served via header.php):
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+    <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+    <link rel="shortcut icon" href="../favicon.ico">
+-->
 
 <style>
     :root {
@@ -82,10 +89,12 @@ require_once 'header.php';
         font-weight: 700;
         text-decoration: none;
     }
-    .auth-brand svg {
-        width: 22px;
-        height: 22px;
+    .auth-brand svg,
+    .auth-brand img {
+        width: 28px;
+        height: 28px;
         color: var(--green-700);
+        display: block;
     }
     .auth-heading {
         margin: 0 0 8px;
@@ -245,10 +254,7 @@ require_once 'header.php';
 
 <main class="auth-card">
     <a href="view_announcements.php" class="auth-brand">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M20.5 3.5C12.7 3.6 6.5 5.1 4 9.7c-1.4 2.6-.3 5.5 2.3 6.2 2.7.8 5.2-.7 6.8-3.3 1.8-2.6 2.9-5.9 7.4-9.1Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M3.5 20.5c2.7-5.1 6.1-7.8 10.1-9.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-        </svg>
+        <img src="../assets/logo.svg" width="28" height="28" alt="PurokInform logo">
         <span>PurokInform</span>
     </a>
 

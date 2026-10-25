@@ -75,12 +75,22 @@ if (!function_exists('getInitials')) {
     <div class="feed-toolbar">
         <form method="GET" action="search_announcements.php" class="search-form" id="feedSearch">
             <div class="search-input-wrap">
-                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                <input type="text" name="keyword" class="form-control" placeholder="Search announcements..." aria-label="Search announcements">
+                <button type="submit" class="search-icon-btn" aria-label="Search">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.8"/>
+                        <path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                <input type="text" name="keyword" id="searchKeyword" class="form-control search-input" placeholder="Search announcements..." aria-label="Search announcements" autocomplete="off">
+                <button type="button" class="search-clear-btn" id="searchClearBtn" aria-label="Clear search" style="display: none;">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
             </div>
-            <button type="submit" class="btn btn-success search-btn">Search</button>
         </form>
-        <?php if ($_SESSION['role'] === 'Officer'): ?>
+        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Officer'): ?>
             <a href="add_announcement.php" class="btn btn-success btn-add-pill">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                 <span>Add Announcement</span>
@@ -88,7 +98,9 @@ if (!function_exists('getInitials')) {
         <?php endif; ?>
     </div>
 
-    <?php if (isset($_GET['added'])): ?>
+    <?php if (isset($_GET['error']) && $_GET['error'] === 'forbidden'): ?>
+        <div class="alert alert-danger" role="alert">You can only edit or delete your own posts.</div>
+    <?php elseif (isset($_GET['added'])): ?>
         <div class="alert alert-success" role="status">Announcement added successfully.</div>
     <?php elseif (isset($_GET['updated'])): ?>
         <div class="alert alert-success" role="status">Announcement updated successfully.</div>
@@ -135,7 +147,7 @@ if (!function_exists('getInitials')) {
                                     <span><?php echo htmlspecialchars($row['category_name'] ?? 'Uncategorized'); ?></span>
                                 </div>
                             </div>
-                            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Officer'): ?>
+                            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Officer' && !empty($row['user_id']) && (int)$row['user_id'] === (int)($_SESSION['user_id'] ?? 0)): ?>
                                 <div class="post-menu-wrap">
                                     <button type="button" class="post-menu-btn" aria-label="More actions" aria-haspopup="true" aria-expanded="false" onclick="togglePostMenu(this)">
                                         <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
@@ -159,6 +171,8 @@ if (!function_exists('getInitials')) {
                         </div>
 
                         <h2 class="post-title"><?php echo htmlspecialchars($row['title']); ?></h2>
+
+                        <p class="post-details mb-0"><?php echo nl2br(htmlspecialchars($row['details'])); ?></p>
 
                         <?php
                         $cardImages = [];
@@ -214,8 +228,6 @@ if (!function_exists('getInitials')) {
                                 </div>
                             <?php endif; ?>
                         <?php endif; ?>
-
-                        <p class="post-details mb-0"><?php echo nl2br(htmlspecialchars($row['details'])); ?></p>
 
                         <div class="post-card-footer mt-3 pt-2 d-flex align-items-center">
                             <div class="reaction-wrap" data-announcement-id="<?php echo $row['announcement_id']; ?>">

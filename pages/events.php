@@ -14,20 +14,39 @@ require_once 'header.php';
 ?>
 
 <div class="feed-column">
-    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
-        <div>
-            <h1 class="h2 mb-1">Community Events</h1>
-            <p class="text-muted mb-0">Upcoming gatherings, clean-ups, and assemblies.</p>
+    <div class="events-header-bar mb-4">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div>
+                <h1 class="h2 mb-1">Community Events</h1>
+                <p class="text-muted mb-0">Gatherings, clean-ups, and assemblies.</p>
+            </div>
+            <?php if ($_SESSION['role'] === 'Officer'): ?>
+                <a href="add_event.php" class="btn btn-success btn-add-pill">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    <span>Add Event</span>
+                </a>
+            <?php endif; ?>
         </div>
-        <?php if ($_SESSION['role'] === 'Officer'): ?>
-            <a href="add_event.php" class="btn btn-success btn-add-pill">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                <span>Add Event</span>
-            </a>
-        <?php endif; ?>
+
+        <div class="events-filter-strip mt-3">
+            <div class="events-tabs-nav" role="tablist" aria-label="Event categories">
+                <button type="button" class="events-tab-pill active" id="tab-upcoming" data-target="upcomingEventsSection" role="tab" aria-controls="upcomingEventsSection" aria-selected="true">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                    <span>Upcoming</span>
+                    <span class="events-tab-badge"><?php echo count($upcomingEvents); ?></span>
+                </button>
+                <button type="button" class="events-tab-pill" id="tab-past" data-target="pastEventsSection" role="tab" aria-controls="pastEventsSection" aria-selected="false">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                    <span>Past Events</span>
+                    <span class="events-tab-badge <?php echo count($pastEvents) === 0 ? 'badge-zero' : ''; ?>"><?php echo count($pastEvents); ?></span>
+                </button>
+            </div>
+        </div>
     </div>
 
-    <?php if (isset($_GET['added'])): ?>
+    <?php if (isset($_GET['error']) && $_GET['error'] === 'forbidden'): ?>
+        <div class="alert alert-danger" role="alert">You can only edit or delete your own posts.</div>
+    <?php elseif (isset($_GET['added'])): ?>
         <div class="alert alert-success" role="status">Event added successfully and notifications sent.</div>
     <?php elseif (isset($_GET['updated'])): ?>
         <div class="alert alert-success" role="status">Event updated successfully.</div>
@@ -35,9 +54,7 @@ require_once 'header.php';
         <div class="alert alert-success" role="status">Event deleted successfully.</div>
     <?php endif; ?>
 
-    <section class="mb-5">
-        <h2 class="h4 mb-3">Upcoming Events (<?php echo count($upcomingEvents); ?>)</h2>
-
+    <section id="upcomingEventsSection" class="events-pane" role="tabpanel" aria-labelledby="tab-upcoming">
         <?php if (empty($upcomingEvents)): ?>
             <div class="card post-card">
                 <div class="empty-state">
@@ -80,7 +97,7 @@ require_once 'header.php';
                                     </div>
                                 </div>
 
-                                <?php if ($_SESSION['role'] === 'Officer'): ?>
+                                <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Officer' && !empty($ev['created_by']) && (int)$ev['created_by'] === (int)($_SESSION['user_id'] ?? 0)): ?>
                                     <div class="post-menu-wrap">
                                         <button type="button" class="post-menu-btn" aria-label="More actions" aria-haspopup="true" aria-expanded="false" onclick="togglePostMenu(this)">
                                             <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
@@ -103,14 +120,14 @@ require_once 'header.php';
                                 <?php endif; ?>
                             </div>
 
+                            <?php if (!empty($ev['description'])): ?>
+                                <p class="post-details mb-0"><?php echo nl2br(htmlspecialchars($ev['description'])); ?></p>
+                            <?php endif; ?>
+
                             <?php if (!empty($ev['image_path']) && file_exists(__DIR__ . '/../' . $ev['image_path'])): ?>
                                 <div class="post-image-wrap">
                                     <img src="../<?php echo htmlspecialchars($ev['image_path']); ?>" alt="<?php echo htmlspecialchars($ev['title']); ?>" class="post-image" style="max-height: 320px; object-fit: cover;">
                                 </div>
-                            <?php endif; ?>
-
-                            <?php if (!empty($ev['description'])): ?>
-                                <p class="post-details mb-0"><?php echo nl2br(htmlspecialchars($ev['description'])); ?></p>
                             <?php endif; ?>
                         </div>
                     </article>
@@ -119,10 +136,15 @@ require_once 'header.php';
         <?php endif; ?>
     </section>
 
-    <section class="past-events-section mt-5 pt-3 border-top">
-        <h2 class="h5 text-muted mb-3">Past Events</h2>
+    <section id="pastEventsSection" class="events-pane" role="tabpanel" aria-labelledby="tab-past" style="display: none;">
         <?php if (empty($pastEvents)): ?>
-            <p class="text-muted small">No past events recorded.</p>
+            <div class="card post-card">
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                    <h4>No past events</h4>
+                    <p class="mb-0">Past gatherings and assemblies will appear here once concluded.</p>
+                </div>
+            </div>
         <?php else: ?>
             <div class="feed-grid">
                 <?php foreach ($pastEvents as $ev): ?>
@@ -149,7 +171,7 @@ require_once 'header.php';
                                         <?php endif; ?>
                                     </div>
                                 </div>
-                                <?php if ($_SESSION['role'] === 'Officer'): ?>
+                                <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Officer' && !empty($ev['created_by']) && (int)$ev['created_by'] === (int)($_SESSION['user_id'] ?? 0)): ?>
                                     <div class="post-menu-wrap">
                                         <button type="button" class="post-menu-btn" aria-label="More actions" aria-haspopup="true" aria-expanded="false" onclick="togglePostMenu(this)">
                                             <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
@@ -179,5 +201,47 @@ require_once 'header.php';
     </section>
 </div>
 
-<?php require_once 'footer.php'; ?>
+<script>
+function initEventTabs() {
+    const tabs = document.querySelectorAll('.events-tab-pill');
+    const upcomingPane = document.getElementById('upcomingEventsSection');
+    const pastPane = document.getElementById('pastEventsSection');
 
+    if (!tabs.length || !upcomingPane || !pastPane) return;
+
+    function switchTab(targetId) {
+        tabs.forEach(function (tab) {
+            const isMatch = tab.getAttribute('data-target') === targetId;
+            tab.classList.toggle('active', isMatch);
+            tab.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+        });
+
+        if (targetId === 'pastEventsSection') {
+            upcomingPane.style.display = 'none';
+            pastPane.style.display = 'block';
+            if (window.location.hash !== '#past') {
+                history.replaceState(null, '', '#past');
+            }
+        } else {
+            upcomingPane.style.display = 'block';
+            pastPane.style.display = 'none';
+            if (window.location.hash === '#past') {
+                history.replaceState(null, '', '#upcoming');
+            }
+        }
+    }
+
+    tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            switchTab(this.getAttribute('data-target'));
+        });
+    });
+
+    if (window.location.hash === '#past') {
+        switchTab('pastEventsSection');
+    }
+}
+document.addEventListener('DOMContentLoaded', initEventTabs);
+</script>
+
+<?php require_once 'footer.php'; ?>

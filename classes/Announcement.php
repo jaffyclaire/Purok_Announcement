@@ -283,11 +283,15 @@ class Announcement
             $this->conn->beginTransaction();
 
             $check = $this->conn->prepare(
-                "SELECT announcement_id FROM {$this->table} WHERE announcement_id = :id FOR UPDATE"
+                "SELECT announcement_id, user_id FROM {$this->table} WHERE announcement_id = :id FOR UPDATE"
             );
             $check->execute([':id' => (int) $id]);
-            if (!$check->fetchColumn()) {
+            $annRow = $check->fetch();
+            if (!$annRow) {
                 throw new RuntimeException('The announcement no longer exists.');
+            }
+            if (empty($annRow['user_id']) || (int)$annRow['user_id'] !== (int)$authorId) {
+                throw new RuntimeException('You can only edit or delete your own posts.');
             }
 
             $query = "UPDATE {$this->table}
@@ -373,12 +377,24 @@ class Announcement
     }
 
     // TRANSACTION 3 - Delete an announcement's notifications, reactions, attachments and the announcement.
-    public function deleteWithNotifications($id)
+    public function deleteWithNotifications($id, $authorId = null)
     {
         $filesToDelete = [];
 
         try {
             $this->conn->beginTransaction();
+
+            $check = $this->conn->prepare(
+                "SELECT announcement_id, user_id FROM {$this->table} WHERE announcement_id = :id FOR UPDATE"
+            );
+            $check->execute([':id' => (int) $id]);
+            $annRow = $check->fetch();
+            if (!$annRow) {
+                throw new RuntimeException('The announcement no longer exists.');
+            }
+            if ($authorId !== null && (empty($annRow['user_id']) || (int)$annRow['user_id'] !== (int)$authorId)) {
+                throw new RuntimeException('You can only edit or delete your own posts.');
+            }
 
             $attachStmt = $this->conn->prepare(
                 "SELECT file_path FROM attachments WHERE announcement_id = :id"

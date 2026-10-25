@@ -13,6 +13,17 @@ if (!$id) {
     exit;
 }
 
+$record = $eventModel->getEventById($id);
+if (!$record) {
+    header("Location: events.php");
+    exit;
+}
+if (empty($record['created_by']) || (int)$record['created_by'] !== (int)$_SESSION['user_id']) {
+    http_response_code(403);
+    header("Location: events.php?error=forbidden");
+    exit;
+}
+
 $message = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -30,16 +41,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header("Location: events.php?updated=1");
             exit;
         } catch (Throwable $e) {
+            if ($e->getMessage() === 'You can only edit or delete your own posts.') {
+                http_response_code(403);
+                header("Location: events.php?error=forbidden");
+                exit;
+            }
             error_log('Event update failed: ' . $e->getMessage());
             $message = $e->getMessage() ?: "Failed to update the event.";
         }
     }
-}
-
-$record = $eventModel->getEventById($id);
-if (!$record) {
-    header("Location: events.php");
-    exit;
 }
 
 $dateVal = !empty($record['event_date']) ? date('Y-m-d\TH:i', strtotime($record['event_date'])) : '';

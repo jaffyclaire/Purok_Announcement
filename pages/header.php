@@ -29,15 +29,40 @@ if (!function_exists('getInitials')) {
         return substr($initials, 0, 2);
     }
 }
+
+$pageTitles = [
+    'view_announcements.php'   => 'PurokInform - Feed',
+    'login.php'                => 'PurokInform - Log in',
+    'register.php'             => 'PurokInform - Register',
+    'dashboard.php'            => 'PurokInform - Dashboard',
+    'events.php'               => 'PurokInform - Events',
+    'notifications.php'        => 'PurokInform - Notifications',
+    'profile.php'              => 'PurokInform - Profile',
+    'search_announcements.php' => 'PurokInform - Search',
+    'add_announcement.php'     => 'PurokInform - New Announcement',
+    'update_announcement.php'  => 'PurokInform - Edit Announcement',
+    'delete_announcement.php'  => 'PurokInform - Delete Announcement',
+    'add_event.php'            => 'PurokInform - New Event',
+    'update_event.php'         => 'PurokInform - Edit Event',
+    'delete_event.php'         => 'PurokInform - Delete Event',
+    'test_connection.php'      => 'PurokInform - System Status',
+];
+$currentPageTitle = $pageTitle ?? ($pageTitles[$currentPage] ?? 'PurokInform');
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PurokInform | Announcement Platform</title>
+    <title><?php echo htmlspecialchars($currentPageTitle); ?></title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+    <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+    <link rel="shortcut icon" href="../favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
     <link href="../assets/css/app.css" rel="stylesheet">
 </head>
 <body class="<?php echo $isAuthPage ? 'auth-document' : 'app-document'; ?>">
@@ -52,7 +77,7 @@ if (!function_exists('getInitials')) {
         <div class="topnav-inner">
             <div class="topnav-left">
                 <a class="topnav-brand" href="view_announcements.php" aria-label="PurokInform home">
-                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 19.5v-9Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 21v-7h6v7" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                    <img src="../assets/logo.svg" width="28" height="28" alt="PurokInform logo">
                     <span>PurokInform</span>
                 </a>
 
@@ -449,11 +474,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const toggle = document.querySelector('.mobile-menu-toggle');
     const navigation = document.getElementById('primaryNavigation');
-    if (!toggle || !navigation) return;
-    toggle.addEventListener('click', function () {
-        const open = navigation.classList.toggle('is-open');
-        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-        toggle.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
-    });
+    if (toggle && navigation) {
+        toggle.addEventListener('click', function () {
+            const open = navigation.classList.toggle('is-open');
+            toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            toggle.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+        });
+    }
+
+    const searchInput = document.getElementById('searchKeyword');
+    const searchClear = document.getElementById('searchClearBtn');
+    if (searchInput && searchClear) {
+        searchInput.addEventListener('input', function() {
+            searchClear.style.display = searchInput.value.trim().length > 0 ? 'flex' : 'none';
+        });
+        searchClear.addEventListener('click', function(e) {
+            e.preventDefault();
+            searchInput.value = '';
+            searchClear.style.display = 'none';
+            if (searchInput.getAttribute('data-is-active-search') === 'true' || window.location.pathname.includes('search_announcements.php')) {
+                window.location.href = 'view_announcements.php';
+            } else {
+                searchInput.focus();
+            }
+        });
+    }
 });
 </script>

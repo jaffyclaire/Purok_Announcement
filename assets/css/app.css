@@ -1,4 +1,284 @@
+/* ==========================================================================
+   Typography - Self-Hosted Fonts (Delight & Emberly)
+   ========================================================================== */
+
+/* Delight (Sans-Serif - 9 Weights) */
+@font-face {
+    font-family: 'Delight';
+    font-style: normal;
+    font-weight: 100;
+    font-display: swap;
+    src: url('../fonts/Delight-Thin.woff2') format('woff2'),
+         url('../fonts/Delight-Thin.woff') format('woff'),
+         url('../fonts/Delight-Thin.ttf') format('truetype'),
+         url('../fonts/Delight-Thin.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Delight';
+    font-style: normal;
+    font-weight: 200;
+    font-display: swap;
+    src: url('../fonts/Delight-ExtraLight.woff2') format('woff2'),
+         url('../fonts/Delight-ExtraLight.woff') format('woff'),
+         url('../fonts/Delight-ExtraLight.ttf') format('truetype'),
+         url('../fonts/Delight-ExtraLight.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Delight';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url('../fonts/Delight-Light.woff2') format('woff2'),
+         url('../fonts/Delight-Light.woff') format('woff'),
+         url('../fonts/Delight-Light.ttf') format('truetype'),
+         url('../fonts/Delight-Light.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Delight';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/Delight-Regular.woff2') format('woff2'),
+         url('../fonts/Delight-Regular.woff') format('woff'),
+         url('../fonts/Delight-Regular.ttf') format('truetype'),
+         url('../fonts/Delight-Regular.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Delight';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../fonts/Delight-Medium.woff2') format('woff2'),
+         url('../fonts/Delight-Medium.woff') format('woff'),
+         url('../fonts/Delight-Medium.ttf') format('truetype'),
+         url('../fonts/Delight-Medium.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Delight';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('../fonts/Delight-SemiBold.woff2') format('woff2'),
+         url('../fonts/Delight-SemiBold.woff') format('woff'),
+         url('../fonts/Delight-SemiBold.ttf') format('truetype'),
+         url('../fonts/Delight-SemiBold.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Delight';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../fonts/Delight-Bold.woff2') format('woff2'),
+         url('../fonts/Delight-Bold.woff') format('woff'),
+         url('../fonts/Delight-Bold.ttf') format('truetype'),
+         url('../fonts/Delight-Bold.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Delight';
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url('../fonts/Delight-ExtraBold.woff2') format('woff2'),
+         url('../fonts/Delight-ExtraBold.woff') format('woff'),
+         url('../fonts/Delight-ExtraBold.ttf') format('truetype'),
+         url('../fonts/Delight-ExtraBold.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Delight';
+    font-style: normal;
+    font-weight: 900;
+    font-display: swap;
+    src: url('../fonts/Delight-Black.woff2') format('woff2'),
+         url('../fonts/Delight-Black.woff') format('woff'),
+         url('../fonts/Delight-Black.ttf') format('truetype'),
+         url('../fonts/Delight-Black.otf') format('opentype');
+}
+
+/* Emberly (Serif - 9 Weights with Italics) */
+@font-face {
+    font-family: 'Emberly';
+    font-style: normal;
+    font-weight: 100;
+    font-display: swap;
+    src: url('../fonts/Emberly-Thin.woff2') format('woff2'),
+         url('../fonts/Emberly-Thin.woff') format('woff'),
+         url('../fonts/Emberly-Thin.ttf') format('truetype'),
+         url('../fonts/Emberly-Thin.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Emberly';
+    font-style: italic;
+    font-weight: 100;
+    font-display: swap;
+    src: url('../fonts/Emberly-ThinItalic.woff2') format('woff2'),
+         url('../fonts/Emberly-ThinItalic.woff') format('woff'),
+         url('../fonts/Emberly-ThinItalic.ttf') format('truetype'),
+         url('../fonts/Emberly-ThinItalic.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Emberly';
+    font-style: normal;
+    font-weight: 200;
+    font-display: swap;
+    src: url('../fonts/Emberly-ExtraLight.woff2') format('woff2'),
+         url('../fonts/Emberly-ExtraLight.woff') format('woff'),
+         url('../fonts/Emberly-ExtraLight.ttf') format('truetype'),
+         url('../fonts/Emberly-ExtraLight.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Emberly';
+    font-style: italic;
+    font-weight: 200;
+    font-display: swap;
+    src: url('../fonts/Emberly-ExtraLightItalic.woff2') format('woff2'),
+         url('../fonts/Emberly-ExtraLightItalic.woff') format('woff'),
+         url('../fonts/Emberly-ExtraLightItalic.ttf') format('truetype'),
+         url('../fonts/Emberly-ExtraLightItalic.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Emberly';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url('../fonts/Emberly-Light.woff2') format('woff2'),
+         url('../fonts/Emberly-Light.woff') format('woff'),
+         url('../fonts/Emberly-Light.ttf') format('truetype'),
+         url('../fonts/Emberly-Light.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Emberly';
+    font-style: italic;
+    font-weight: 300;
+    font-display: swap;
+    src: url('../fonts/Emberly-LightItalic.woff2') format('woff2'),
+         url('../fonts/Emberly-LightItalic.woff') format('woff'),
+         url('../fonts/Emberly-LightItalic.ttf') format('truetype'),
+         url('../fonts/Emberly-LightItalic.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Emberly';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/Emberly-Regular.woff2') format('woff2'),
+         url('../fonts/Emberly-Regular.woff') format('woff'),
+         url('../fonts/Emberly-Regular.ttf') format('truetype'),
+         url('../fonts/Emberly-Regular.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Emberly';
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/Emberly-Italic.woff2') format('woff2'),
+         url('../fonts/Emberly-Italic.woff') format('woff'),
+         url('../fonts/Emberly-Italic.ttf') format('truetype'),
+         url('../fonts/Emberly-Italic.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Emberly';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../fonts/Emberly-Medium.woff2') format('woff2'),
+         url('../fonts/Emberly-Medium.woff') format('woff'),
+         url('../fonts/Emberly-Medium.ttf') format('truetype'),
+         url('../fonts/Emberly-Medium.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Emberly';
+    font-style: italic;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../fonts/Emberly-MediumItalic.woff2') format('woff2'),
+         url('../fonts/Emberly-MediumItalic.woff') format('woff'),
+         url('../fonts/Emberly-MediumItalic.ttf') format('truetype'),
+         url('../fonts/Emberly-MediumItalic.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Emberly';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('../fonts/Emberly-SemiBold.woff2') format('woff2'),
+         url('../fonts/Emberly-SemiBold.woff') format('woff'),
+         url('../fonts/Emberly-SemiBold.ttf') format('truetype'),
+         url('../fonts/Emberly-SemiBold.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Emberly';
+    font-style: italic;
+    font-weight: 600;
+    font-display: swap;
+    src: url('../fonts/Emberly-SemiBoldItalic.woff2') format('woff2'),
+         url('../fonts/Emberly-SemiBoldItalic.woff') format('woff'),
+         url('../fonts/Emberly-SemiBoldItalic.ttf') format('truetype'),
+         url('../fonts/Emberly-SemiBoldItalic.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Emberly';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../fonts/Emberly-Bold.woff2') format('woff2'),
+         url('../fonts/Emberly-Bold.woff') format('woff'),
+         url('../fonts/Emberly-Bold.ttf') format('truetype'),
+         url('../fonts/Emberly-Bold.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Emberly';
+    font-style: italic;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../fonts/Emberly-BoldItalic.woff2') format('woff2'),
+         url('../fonts/Emberly-BoldItalic.woff') format('woff'),
+         url('../fonts/Emberly-BoldItalic.ttf') format('truetype'),
+         url('../fonts/Emberly-BoldItalic.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Emberly';
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url('../fonts/Emberly-ExtraBold.woff2') format('woff2'),
+         url('../fonts/Emberly-ExtraBold.woff') format('woff'),
+         url('../fonts/Emberly-ExtraBold.ttf') format('truetype'),
+         url('../fonts/Emberly-ExtraBold.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Emberly';
+    font-style: italic;
+    font-weight: 800;
+    font-display: swap;
+    src: url('../fonts/Emberly-ExtraBoldItalic.woff2') format('woff2'),
+         url('../fonts/Emberly-ExtraBoldItalic.woff') format('woff'),
+         url('../fonts/Emberly-ExtraBoldItalic.ttf') format('truetype'),
+         url('../fonts/Emberly-ExtraBoldItalic.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Emberly';
+    font-style: normal;
+    font-weight: 900;
+    font-display: swap;
+    src: url('../fonts/Emberly-Black.woff2') format('woff2'),
+         url('../fonts/Emberly-Black.woff') format('woff'),
+         url('../fonts/Emberly-Black.ttf') format('truetype'),
+         url('../fonts/Emberly-Black.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Emberly';
+    font-style: italic;
+    font-weight: 900;
+    font-display: swap;
+    src: url('../fonts/Emberly-BlackItalic.woff2') format('woff2'),
+         url('../fonts/Emberly-BlackItalic.woff') format('woff'),
+         url('../fonts/Emberly-BlackItalic.ttf') format('truetype'),
+         url('../fonts/Emberly-BlackItalic.otf') format('opentype');
+}
+
 :root {
+    --font-heading: "Delight", "Poppins", sans-serif;
+    --font-body: "Emberly", Georgia, serif;
     --green-900: #1F4D2B;
     --green-700: #3F7A2E;
     --green-500: #6FA04F;
@@ -20,14 +300,90 @@ body {
     min-height: 100vh;
     margin: 0;
     background: var(--cream);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
+    color: #1E2A22;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.6;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, .page-title, .auth-heading {
     color: var(--green-900);
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+}
+
+h2, h3, h4, h5, h6,
+.post-title,
+.event-card-title,
+.stat-number,
+.dashboard-stat-number,
+.stat-card-number,
+.feed-title,
+.events-strip-title {
+    color: var(--green-900);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+}
+
+p,
+.post-details,
+.event-desc,
+.notif-page-message,
+.auth-sub {
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.6;
+    color: #1E2A22;
+}
+
+.btn,
+button,
+.topnav-link,
+.badge,
+.role-chip,
+.form-label,
+.filter-label,
+.meta-badge,
+.btn-add-pill,
+.notif-mark-all-btn,
+.btn-change-photo {
+    font-family: var(--font-heading);
     font-weight: 600;
+    font-size: 14px;
+}
+
+input,
+textarea,
+select,
+.form-control,
+.form-select {
+    font-family: inherit;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+em, i, cite, blockquote {
+    font-style: italic;
+}
+
+.post-meta-line,
+.post-meta-line span,
+.event-meta-line,
+.event-meta-line span,
+.events-strip-sub,
+.reaction-count,
+.notif-page-time,
+.notif-page-title,
+.meta-sep {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--muted);
 }
 
 a {
@@ -95,9 +451,9 @@ select:focus-visible {
     align-items: center;
     gap: 8px;
     color: var(--green-900);
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-heading);
     font-size: 20px;
-    font-weight: 700;
+    font-weight: 800;
     text-decoration: none;
     line-height: 1;
 }
@@ -106,10 +462,12 @@ select:focus-visible {
     color: var(--green-700);
 }
 
-.topnav-brand svg {
-    width: 20px;
-    height: 20px;
+.topnav-brand svg,
+.topnav-brand img {
+    width: 28px;
+    height: 28px;
     flex-shrink: 0;
+    display: block;
 }
 
 .topnav-links {
@@ -301,7 +659,7 @@ select:focus-visible {
     padding: 15px 17px 12px;
     border-bottom: 1px solid #e8eee4;
     color: var(--green-900);
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-heading);
     font-size: 1.05rem;
     font-weight: 700;
 }
@@ -516,7 +874,9 @@ select:focus-visible {
     border-radius: 14px;
     background-color: #fff;
     color: var(--text);
-    font-family: 'Inter', sans-serif;
+    font-family: inherit;
+    font-weight: 500;
+    font-size: 16px;
 }
 
 .main-content textarea.form-control {
@@ -696,54 +1056,107 @@ select:focus-visible {
     flex-wrap: nowrap;
 }
 
-.feed-toolbar .search-form {
+.feed-toolbar .search-form,
+.search-form {
     display: flex;
     align-items: center;
-    gap: 8px;
     flex: 1 1 auto;
     min-width: 0;
+    width: 100%;
     max-width: none;
     margin: 0;
 }
 
-.feed-toolbar .search-input-wrap {
+.search-input-wrap {
     position: relative;
     flex: 1 1 auto;
     min-width: 0;
+    width: 100%;
 }
 
-.feed-toolbar .search-input-wrap svg {
+.search-icon-btn {
     position: absolute;
     top: 50%;
-    left: 14px;
-    width: 18px;
-    height: 18px;
-    color: var(--muted);
+    left: 8px;
     transform: translateY(-50%);
-    pointer-events: none;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    border-radius: 50%;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.15s ease, color 0.15s ease;
+    z-index: 3;
 }
 
+.search-icon-btn:hover,
+.search-icon-btn:focus-visible {
+    background: rgba(31, 77, 43, 0.08);
+    color: var(--green-900);
+    outline: none;
+}
+
+.search-icon-btn svg {
+    width: 17px;
+    height: 17px;
+}
+
+.search-clear-btn {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    border-radius: 50%;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.15s ease, color 0.15s ease;
+    z-index: 3;
+}
+
+.search-clear-btn:hover,
+.search-clear-btn:focus-visible {
+    background: rgba(31, 77, 43, 0.12);
+    color: var(--text);
+    outline: none;
+}
+
+.search-input-wrap .form-control,
+.search-input-wrap .form-control.search-input,
 .feed-toolbar .search-input-wrap .form-control {
+    width: 100%;
     min-height: 42px;
     height: 42px;
     padding-left: 42px;
-    padding-right: 14px;
+    padding-right: 38px;
     border-radius: 999px;
-    font-size: 0.9rem;
+    background: #fff;
+    border: 1px solid #d8e2cf;
+    box-shadow: 0 2px 8px rgba(31, 77, 43, 0.04);
+    font-size: 0.92rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.feed-toolbar .search-btn {
-    min-width: auto;
-    height: 42px;
-    min-height: 42px;
-    padding: 0 16px;
-    font-size: 0.88rem;
-    font-weight: 600;
-    white-space: nowrap;
-    flex-shrink: 0;
-    border-radius: 999px;
+.search-input-wrap .form-control:focus,
+.feed-toolbar .search-input-wrap .form-control:focus {
+    border-color: var(--green-500);
+    box-shadow: 0 0 0 3px rgba(111, 160, 79, 0.2);
+    outline: none;
 }
 
+.btn-add-pill,
 .feed-toolbar .btn-add-pill {
     display: inline-flex;
     align-items: center;
@@ -756,40 +1169,6 @@ select:focus-visible {
     white-space: nowrap;
     flex-shrink: 0;
     border-radius: 999px;
-}
-
-.search-form {
-    display: flex;
-    width: 100%;
-    max-width: 760px;
-    gap: 10px;
-    margin: 0 auto 20px;
-}
-
-.search-input-wrap {
-    position: relative;
-    flex: 1 1 auto;
-    min-width: 0;
-}
-
-.search-input-wrap svg {
-    position: absolute;
-    top: 50%;
-    left: 14px;
-    width: 18px;
-    height: 18px;
-    color: var(--muted);
-    transform: translateY(-50%);
-    pointer-events: none;
-}
-
-.search-input-wrap .form-control {
-    padding-left: 42px;
-    border-radius: 999px;
-}
-
-.search-form .btn {
-    min-width: auto;
 }
 
 .feed-grid,
@@ -986,7 +1365,7 @@ select:focus-visible {
 .post-title {
     margin: 0 0 8px;
     color: var(--green-900);
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-heading);
     font-size: 1.25rem;
     font-weight: 600;
     line-height: 1.35;
@@ -1106,7 +1485,7 @@ select:focus-visible {
 .stat-number {
     margin: 0 0 3px;
     color: var(--green-900);
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-heading);
     font-size: 2rem;
     font-weight: 700;
     line-height: 1.1;
@@ -1328,34 +1707,30 @@ select:focus-visible {
     }
 
     .feed-toolbar {
-        gap: 8px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .feed-toolbar .search-form {
+        width: 100%;
     }
 
     .feed-toolbar .search-input-wrap .form-control {
-        min-height: 38px;
-        height: 38px;
-        font-size: 0.84rem;
-        padding-left: 36px;
-    }
-
-    .feed-toolbar .search-input-wrap svg {
-        left: 11px;
-        width: 16px;
-        height: 16px;
-    }
-
-    .feed-toolbar .search-btn {
-        min-height: 38px;
-        height: 38px;
-        padding: 0 12px;
-        font-size: 0.82rem;
+        min-height: 40px;
+        height: 40px;
+        font-size: 0.88rem;
+        padding-left: 38px;
+        padding-right: 34px;
     }
 
     .feed-toolbar .btn-add-pill {
-        min-height: 38px;
-        height: 38px;
-        padding: 0 12px;
-        font-size: 0.82rem;
+        width: 100%;
+        justify-content: center;
+        min-height: 40px;
+        height: 40px;
+        padding: 0 16px;
+        font-size: 0.88rem;
     }
 
     .feed-toolbar .btn-add-pill svg {
@@ -1646,7 +2021,7 @@ img.avatar-lg,
 
 .events-strip-title {
     color: var(--green-900);
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-heading);
     font-size: 1.15rem;
     font-weight: 600;
     margin: 0;
@@ -1714,8 +2089,8 @@ img.avatar-lg,
 
 .event-mini-day {
     font-size: 1.15rem;
-    font-weight: 800;
-    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-family: var(--font-heading);
     color: var(--green-900);
 }
 
@@ -1726,7 +2101,7 @@ img.avatar-lg,
 
 .event-mini-title {
     font-size: 0.9rem;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-heading);
     font-weight: 600;
     color: var(--green-900);
     margin: 0 0 3px 0;
@@ -1746,6 +2121,89 @@ img.avatar-lg,
 /* ==========================================================================
    Events Page & Badges
    ========================================================================== */
+.events-header-bar {
+    margin-bottom: 22px;
+}
+
+.events-filter-strip {
+    display: flex;
+    align-items: center;
+}
+
+.events-tabs-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    background: #eef3e9;
+    border: 1px solid #dce5d6;
+    border-radius: 999px;
+}
+
+.events-tab-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 15px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--font-heading);
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+}
+
+.events-tab-pill svg {
+    flex-shrink: 0;
+    color: var(--muted);
+    transition: color 0.15s ease;
+}
+
+.events-tab-pill:hover {
+    color: var(--green-900);
+    background: rgba(255, 255, 255, 0.65);
+}
+
+.events-tab-pill.active {
+    background: #ffffff;
+    color: var(--green-900);
+    border-color: #d1ded0;
+    box-shadow: 0 2px 6px rgba(31, 77, 43, 0.08);
+}
+
+.events-tab-pill.active svg {
+    color: var(--green-700);
+}
+
+.events-tab-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #e1ecd8;
+    color: var(--green-900);
+    font-size: 0.74rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.events-tab-pill.active .events-tab-badge {
+    background: var(--green-700);
+    color: #ffffff;
+}
+
+.events-tab-badge.badge-zero {
+    opacity: 0.6;
+}
+
 .event-date-badge {
     display: flex;
     flex-direction: column;
@@ -2213,7 +2671,7 @@ img.avatar-lg,
     color: #ffffff;
     font-size: 1.6rem;
     font-weight: 700;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-heading);
     display: flex;
     align-items: center;
     justify-content: center;
