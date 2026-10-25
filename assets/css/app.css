@@ -321,8 +321,7 @@ h2, h3, h4, h5, h6,
 .stat-number,
 .dashboard-stat-number,
 .stat-card-number,
-.feed-title,
-.events-strip-title {
+.feed-title {
     color: var(--green-900);
     font-family: var(--font-heading);
     font-weight: 700;
@@ -375,7 +374,6 @@ em, i, cite, blockquote {
 .post-meta-line span,
 .event-meta-line,
 .event-meta-line span,
-.events-strip-sub,
 .reaction-count,
 .notif-page-time,
 .notif-page-title,
@@ -515,7 +513,8 @@ select:focus-visible {
     display: flex;
     flex: 0 0 auto;
     align-items: center;
-    gap: 8px;
+    gap: 16px;
+    height: 100%;
 }
 
 .topnav-icon-btn {
@@ -594,7 +593,7 @@ select:focus-visible {
     align-items: center;
     justify-content: center;
     padding: 0;
-    border: 1px solid #d8e6cd;
+    border: 1px solid #d4ded0;
     border-radius: 50% !important;
     overflow: hidden !important;
     background: var(--mint);
@@ -602,18 +601,21 @@ select:focus-visible {
     font-size: 0.85rem;
     font-weight: 700;
     cursor: pointer;
-    transition: background-color 150ms ease;
+    box-shadow: 0 0 0 2px #ffffff;
+    transition: background-color 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
     flex-shrink: 0 !important;
 }
 
 .profile-avatar:hover,
 .profile-avatar[aria-expanded="true"] {
     background: #dcebc9;
+    border-color: var(--green-700);
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 3px rgba(31, 77, 43, 0.18);
 }
 
 .profile-avatar.active {
     border-color: var(--green-700);
-    box-shadow: 0 0 0 2px var(--green-700);
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--green-700);
 }
 
 .profile-avatar:focus-visible {
@@ -1052,7 +1054,7 @@ select:focus-visible {
     gap: 12px;
     width: 100%;
     max-width: 760px;
-    margin: 0 auto 20px;
+    margin: 0 auto 24px;
     flex-wrap: nowrap;
 }
 
@@ -2009,114 +2011,6 @@ img.avatar-lg,
     text-decoration: underline;
 }
 
-/* ==========================================================================
-   Upcoming Events Strip (Feed)
-   ========================================================================== */
-.events-strip-card {
-    border: 1px solid rgba(31, 77, 43, 0.1);
-    border-radius: 18px;
-    background: #ffffff;
-    box-shadow: 0 4px 18px rgba(31, 77, 43, 0.05);
-}
-
-.events-strip-title {
-    color: var(--green-900);
-    font-family: var(--font-heading);
-    font-size: 1.15rem;
-    font-weight: 600;
-    margin: 0;
-}
-
-.events-strip-view-all {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--green-700);
-    text-decoration: none;
-}
-
-.events-strip-view-all:hover {
-    color: var(--green-900);
-    text-decoration: underline;
-}
-
-.events-strip-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
-}
-
-.event-strip-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 10px 12px;
-    border-radius: 12px;
-    background: #fbfdf9;
-    border: 1px solid #eef2e7;
-    transition: background-color 150ms ease, border-color 150ms ease;
-}
-
-.event-strip-item:hover {
-    background: #f4f8ee;
-    border-color: #dbe7cf;
-}
-
-.event-mini-date {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-width: 44px;
-    height: 48px;
-    padding: 2px 6px;
-    border-radius: 8px;
-    background: var(--mint);
-    color: var(--green-900);
-    flex-shrink: 0;
-    line-height: 1.1;
-}
-
-.event-mini-month {
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--green-700);
-}
-
-.event-mini-day {
-    font-size: 1.15rem;
-    font-weight: 700;
-    font-family: var(--font-heading);
-    color: var(--green-900);
-}
-
-.event-mini-body {
-    flex: 1 1 auto;
-    min-width: 0;
-}
-
-.event-mini-title {
-    font-size: 0.9rem;
-    font-family: var(--font-heading);
-    font-weight: 600;
-    color: var(--green-900);
-    margin: 0 0 3px 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.event-mini-meta {
-    font-size: 0.76rem;
-    color: var(--muted);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
 
 /* ==========================================================================
    Events Page & Badges

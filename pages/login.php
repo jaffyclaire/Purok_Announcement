@@ -183,11 +183,6 @@ require_once 'header.php';
         width: 18px;
         height: 18px;
     }
-    .auth-forgot {
-        margin: -4px 0 18px;
-        text-align: right;
-        font-size: 0.86rem;
-    }
     .auth-link {
         color: var(--green-700);
         font-weight: 600;
@@ -299,8 +294,6 @@ require_once 'header.php';
                 </button>
             </div>
         </div>
-
-        <p class="auth-forgot"><a class="auth-link" href="forgot_password.php">Forgot password?</a></p>
         <button type="submit" class="btn auth-submit w-100">Log in</button>
     </form>
 

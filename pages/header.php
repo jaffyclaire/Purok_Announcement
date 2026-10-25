@@ -109,11 +109,11 @@ $currentPageTitle = $pageTitle ?? ($pageTitles[$currentPage] ?? 'PurokInform');
                         $userAvatar = $_SESSION['avatar_path'] ?? null;
                         $hasNavAvatar = !empty($userAvatar) && file_exists(__DIR__ . '/../' . $userAvatar);
                         ?>
-                        <button type="button" class="profile-avatar avatar-container-nav <?php echo $currentPage === 'profile.php' ? 'active' : ''; ?>" onclick="toggleProfileDropdown()" aria-label="Open account menu" aria-expanded="false" aria-controls="profileDropdown" style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; padding: 0;">
+                        <button type="button" class="profile-avatar avatar-container-nav <?php echo $currentPage === 'profile.php' ? 'active' : ''; ?>" onclick="toggleProfileDropdown()" aria-label="Open account menu" aria-expanded="false" aria-controls="profileDropdown" style="width: 40px; height: 40px; min-width: 40px; max-width: 40px; border-radius: 50%; overflow: hidden; padding: 0; box-shadow: 0 0 0 2px #ffffff; border: 1px solid #d4ded0;">
                             <?php if ($hasNavAvatar): ?>
                                 <img src="../<?php echo htmlspecialchars($userAvatar); ?>" alt="Profile avatar" class="avatar-img avatar-nav profile-avatar-img" width="40" height="40" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block;">
                             <?php else: ?>
-                                <span><?php echo htmlspecialchars($userInitials ?: '?'); ?></span>
+                                <span style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-size: 14px; font-weight: 700;"><?php echo htmlspecialchars($userInitials ?: '?'); ?></span>
                             <?php endif; ?>
                         </button>
                         <div class="profile-dropdown" id="profileDropdown">

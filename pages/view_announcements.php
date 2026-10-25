@@ -2,7 +2,6 @@
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../config/require_login.php';
 require_once __DIR__ . '/../classes/Announcement.php';
-require_once __DIR__ . '/../classes/Event.php';
 
 $database = new Database();
 $db = $database->connect();
@@ -10,9 +9,6 @@ $db = $database->connect();
 $announcement = new Announcement($db);
 $currentUserId = (int) ($_SESSION['user_id'] ?? 0);
 $records = $announcement->getAnnouncements($currentUserId);
-
-$eventModel = new Event($db);
-$upcomingEvents = $eventModel->getUpcomingStrip(3);
 
 require_once 'header.php';
 
@@ -31,47 +27,6 @@ if (!function_exists('getInitials')) {
 ?>
 
 <div class="feed-column">
-    <?php if (!empty($upcomingEvents)): ?>
-        <section class="card events-strip-card mb-4" aria-label="Upcoming community events">
-            <div class="card-body p-3">
-                <div class="d-flex align-items-center justify-content-between mb-2">
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="events-strip-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-                        </span>
-                        <h2 class="h6 mb-0 fw-bold">Upcoming Events</h2>
-                    </div>
-                    <a href="events.php" class="events-strip-all">View all &rarr;</a>
-                </div>
-                <div class="events-strip-list">
-                    <?php foreach ($upcomingEvents as $ev): ?>
-                        <?php
-                        $ts = strtotime($ev['event_date']);
-                        $m = date('M', $ts);
-                        $d = date('d', $ts);
-                        $t = date('g:i A', $ts);
-                        ?>
-                        <a href="events.php" class="events-strip-item">
-                            <div class="event-mini-date">
-                                <span class="mini-month"><?php echo $m; ?></span>
-                                <span class="mini-day"><?php echo $d; ?></span>
-                            </div>
-                            <div class="events-strip-content">
-                                <span class="events-strip-title"><?php echo htmlspecialchars($ev['title']); ?></span>
-                                <span class="events-strip-sub">
-                                    <span><?php echo $t; ?></span>
-                                    <?php if (!empty($ev['location'])): ?>
-                                        &middot; <span><?php echo htmlspecialchars($ev['location']); ?></span>
-                                    <?php endif; ?>
-                                </span>
-                            </div>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-        </section>
-    <?php endif; ?>
-
     <div class="feed-toolbar">
         <form method="GET" action="search_announcements.php" class="search-form" id="feedSearch">
             <div class="search-input-wrap">
