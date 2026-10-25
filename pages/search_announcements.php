@@ -14,74 +14,189 @@ $searched = false;
 
 if (!empty($keyword)) {
     $searched = true;
-    $results = $announcement->searchAnnouncements($keyword);
+    $results = $announcement->searchAnnouncements($keyword, $_SESSION['user_id'] ?? 0);
 }
 
 require_once 'header.php';
+
+if (!function_exists('getInitials')) {
+    function getInitials($name) {
+        $parts = explode(' ', trim((string) $name));
+        $initials = '';
+        foreach ($parts as $p) {
+            if ($p !== '') {
+                $initials .= strtoupper(substr($p, 0, 1));
+            }
+        }
+        return substr($initials, 0, 2);
+    }
+}
 ?>
 
-<h3 class="mb-4">Search Announcements</h3>
-
-<form method="GET" action="search_announcements.php" class="mb-4">
-    <div class="input-group">
-        <input type="text" name="keyword" class="form-control"
-               placeholder="Search by title, details, category, status, or posted-by name..."
-               value="<?php echo htmlspecialchars($keyword); ?>">
-        <button type="submit" class="btn btn-success">Search</button>
+<div class="feed-column">
+    <div class="feed-toolbar">
+        <form method="GET" action="search_announcements.php" class="search-form" id="feedSearch">
+            <div class="search-input-wrap">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                <input type="text" name="keyword" class="form-control"
+                       placeholder="Search by title, details, category, status, or posted-by name..."
+                       value="<?php echo htmlspecialchars($keyword); ?>" aria-label="Search announcements">
+            </div>
+            <button type="submit" class="btn btn-success search-btn">Search</button>
+        </form>
+        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Officer'): ?>
+            <a href="add_announcement.php" class="btn btn-success btn-add-pill">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                <span>Add Announcement</span>
+            </a>
+        <?php endif; ?>
     </div>
-</form>
 
-<?php if ($searched): ?>
-    <p class="text-muted"><?php echo count($results); ?> result(s) found for "<?php echo htmlspecialchars($keyword); ?>"</p>
+    <?php if ($searched): ?>
+        <p class="text-muted mb-3 search-count-text"><?php echo count($results); ?> result(s) found for &ldquo;<?php echo htmlspecialchars($keyword); ?>&rdquo;</p>
 
-    <div class="card shadow-sm">
-        <table class="table table-hover mb-0 align-middle">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Category</th>
-                    <th>Urgent</th>
-                    <th>Status</th>
-                    <th>Posted By</th>
-                    <th>Date Posted</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (empty($results)): ?>
-                    <tr>
-                        <td colspan="8" class="text-center text-muted py-4">No matching announcements found.</td>
-                    </tr>
-                <?php else: ?>
-                    <?php foreach ($results as $row): ?>
-                        <tr>
-                            <td>A-<?php echo str_pad($row['announcement_id'], 4, '0', STR_PAD_LEFT); ?></td>
-                            <td><?php echo htmlspecialchars($row['title']); ?></td>
-                            <td><?php echo htmlspecialchars($row['category_name'] ?? 'Uncategorized'); ?></td>
-                            <td>
-                                <?php if ($row['is_urgent']): ?>
-                                    <span class="badge badge-urgent">URGENT</span>
+        <?php if (empty($results)): ?>
+            <div class="card">
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.5 4.5M8 10.8h5.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                    <h4>No matching announcements</h4>
+                    <p class="mb-0">Try another keyword or check the spelling.</p>
+                </div>
+            </div>
+        <?php else: ?>
+            <div class="feed-grid">
+            <?php foreach ($results as $row): ?>
+                <article class="card post-card" id="announcement-<?php echo $row['announcement_id']; ?>">
+                    <div class="card-body">
+                        <div class="post-header-row">
+                            <div class="post-avatar avatar-container-md" style="width: 44px; height: 44px; border-radius: 50%; overflow: hidden; flex-shrink: 0;">
+                                <?php if (!empty($row['avatar_path']) && file_exists(__DIR__ . '/../' . $row['avatar_path'])): ?>
+                                    <img src="../<?php echo htmlspecialchars($row['avatar_path']); ?>" alt="<?php echo htmlspecialchars($row['posted_by_name'] ?? ''); ?>" class="avatar-img avatar-md post-avatar-img" width="44" height="44" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; display: block;">
                                 <?php else: ?>
-                                    <span class="text-muted">—</span>
+                                    <span><?php echo getInitials($row['posted_by_name'] ?? 'Unknown'); ?></span>
                                 <?php endif; ?>
-                            </td>
-                            <td><?php echo htmlspecialchars($row['status']); ?></td>
-                            <td><?php echo htmlspecialchars($row['posted_by_name'] ?? 'Unknown'); ?></td>
-                            <td><?php echo date('M d, Y', strtotime($row['date_posted'])); ?></td>
-                            <td>
-                                <a href="update_announcement.php?id=<?php echo $row['announcement_id']; ?>"
-                                   class="btn btn-sm btn-outline-primary">Edit</a>
-                                <a href="delete_announcement.php?id=<?php echo $row['announcement_id']; ?>"
-                                   class="btn btn-sm btn-danger"
-                                   onclick="return confirm('Delete this announcement?');">Delete</a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-<?php endif; ?>
+                            </div>
+                            <div class="post-author-info">
+                                <div class="post-author-name"><?php echo htmlspecialchars($row['posted_by_name'] ?? 'Unknown'); ?></div>
+                                <div class="post-meta-line">
+                                    <?php if (!empty($row['is_urgent'])): ?>
+                                        <span class="urgent-text">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                            <span>Urgent</span>
+                                        </span>
+                                        <span class="meta-sep" aria-hidden="true">&middot;</span>
+                                    <?php endif; ?>
+                                    <span><?php echo date('M d, Y \a\t g:i A', strtotime($row['date_posted'])); ?></span>
+                                    <span class="meta-sep" aria-hidden="true">&middot;</span>
+                                    <span><?php echo htmlspecialchars($row['category_name'] ?? 'Uncategorized'); ?></span>
+                                </div>
+                            </div>
+                            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Officer'): ?>
+                                <div class="post-menu-wrap">
+                                    <button type="button" class="post-menu-btn" aria-label="More actions" aria-haspopup="true" aria-expanded="false" onclick="togglePostMenu(this)">
+                                        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                                            <circle cx="5" cy="12" r="2"/>
+                                            <circle cx="12" cy="12" r="2"/>
+                                            <circle cx="19" cy="12" r="2"/>
+                                        </svg>
+                                    </button>
+                                    <div class="post-menu-dropdown" role="menu">
+                                        <a href="update_announcement.php?id=<?php echo $row['announcement_id']; ?>" class="post-menu-item" role="menuitem">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 5 5 5M4 20l4.2-.8L19 8.4a2.1 2.1 0 0 0-3-3L5.2 16.2 4 20Z"/></svg>
+                                            <span>Edit</span>
+                                        </a>
+                                        <a href="delete_announcement.php?id=<?php echo $row['announcement_id']; ?>" class="post-menu-item post-menu-item-delete" role="menuitem" data-delete-confirm>
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6m4-6v6M5.5 7l1 13h11l1-13M9 7V4h6v3"/></svg>
+                                            <span>Delete</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <h2 class="post-title"><?php echo htmlspecialchars($row['title']); ?></h2>
+
+                        <?php
+                        $cardImages = [];
+                        if (!empty($row['images']) && is_array($row['images'])) {
+                            foreach ($row['images'] as $imgItem) {
+                                if (!empty($imgItem['file_path']) && file_exists(__DIR__ . '/../' . $imgItem['file_path'])) {
+                                    $cardImages[] = $imgItem['file_path'];
+                                }
+                            }
+                        } elseif (!empty($row['image_path']) && file_exists(__DIR__ . '/../' . $row['image_path'])) {
+                            $cardImages[] = $row['image_path'];
+                        }
+                        $imgCount = count($cardImages);
+                        ?>
+
+                        <?php if ($imgCount > 0): ?>
+                            <?php
+                            $galleryUrls = array_map(function($p) { return '../' . $p; }, $cardImages);
+                            $galleryJson = htmlspecialchars(json_encode($galleryUrls), ENT_QUOTES, 'UTF-8');
+                            ?>
+                            <?php if ($imgCount === 1): ?>
+                                <div class="post-media-wrap media-grid-1">
+                                    <div class="media-tile" onclick='openLightbox(<?php echo $galleryJson; ?>, 0)' role="button" tabindex="0" aria-label="View image full size">
+                                        <img src="../<?php echo htmlspecialchars($cardImages[0]); ?>" alt="<?php echo htmlspecialchars($row['title']); ?>" class="media-img" loading="lazy">
+                                    </div>
+                                </div>
+                            <?php elseif ($imgCount === 2): ?>
+                                <div class="post-media-wrap media-grid-2">
+                                    <?php foreach ($cardImages as $idx => $imgPath): ?>
+                                        <div class="media-tile" onclick='openLightbox(<?php echo $galleryJson; ?>, <?php echo $idx; ?>)' role="button" tabindex="0" aria-label="View image <?php echo $idx + 1; ?> full size">
+                                            <img src="../<?php echo htmlspecialchars($imgPath); ?>" alt="<?php echo htmlspecialchars($row['title']); ?>" class="media-img" loading="lazy">
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php elseif ($imgCount === 3): ?>
+                                <div class="post-media-wrap media-grid-3">
+                                    <?php foreach ($cardImages as $idx => $imgPath): ?>
+                                        <div class="media-tile <?php echo $idx === 0 ? 'media-tile-lead' : 'media-tile-sub'; ?>" onclick='openLightbox(<?php echo $galleryJson; ?>, <?php echo $idx; ?>)' role="button" tabindex="0" aria-label="View image <?php echo $idx + 1; ?> full size">
+                                            <img src="../<?php echo htmlspecialchars($imgPath); ?>" alt="<?php echo htmlspecialchars($row['title']); ?>" class="media-img" loading="lazy">
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php else: ?>
+                                <div class="post-media-wrap media-grid-4">
+                                    <?php for ($idx = 0; $idx < 4; $idx++): ?>
+                                        <div class="media-tile <?php echo $idx === 0 ? 'media-tile-lead' : 'media-tile-sub'; ?>" onclick='openLightbox(<?php echo $galleryJson; ?>, <?php echo $idx; ?>)' role="button" tabindex="0" aria-label="View image <?php echo $idx + 1; ?> full size">
+                                            <img src="../<?php echo htmlspecialchars($cardImages[$idx]); ?>" alt="<?php echo htmlspecialchars($row['title']); ?>" class="media-img" loading="lazy">
+                                            <?php if ($idx === 3 && $imgCount > 4): ?>
+                                                <div class="media-more-overlay" aria-hidden="true">+<?php echo ($imgCount - 4); ?></div>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php endfor; ?>
+                                </div>
+                            <?php endif; ?>
+                        <?php endif; ?>
+
+                        <p class="post-details mb-0"><?php echo nl2br(htmlspecialchars($row['details'])); ?></p>
+
+                        <div class="post-card-footer mt-3 pt-2 d-flex align-items-center">
+                            <div class="reaction-wrap" data-announcement-id="<?php echo $row['announcement_id']; ?>">
+                                <button type="button" class="btn-heart <?php echo !empty($row['user_reacted']) ? 'is-active' : ''; ?>" aria-label="<?php echo !empty($row['user_reacted']) ? 'Remove acknowledgement' : 'Acknowledge announcement'; ?>" onclick="toggleReaction(this, <?php echo $row['announcement_id']; ?>)">
+                                    <svg viewBox="0 0 24 24" class="heart-icon" aria-hidden="true">
+                                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                    </svg>
+                                </button>
+                                <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Officer'): ?>
+                                    <button type="button" class="reaction-count-btn" onclick="openAcknowledgeList(<?php echo $row['announcement_id']; ?>)" title="View acknowledgements">
+                                        <span class="reaction-count"><?php echo (int)($row['reaction_count'] ?? 0); ?></span>
+                                    </button>
+                                <?php else: ?>
+                                    <span class="reaction-count-static">
+                                        <span class="reaction-count"><?php echo (int)($row['reaction_count'] ?? 0); ?></span>
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    <?php endif; ?>
+</div>
 
 <?php require_once 'footer.php'; ?>

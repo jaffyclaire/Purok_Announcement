@@ -9,43 +9,48 @@ $db = $database->connect();
 $announcement = new Announcement($db);
 $totalActive = $announcement->getTotalActiveCount();
 $byCategory  = $announcement->getCountByCategory();
+$maxCategoryCount = 0;
+foreach ($byCategory as $row) {
+    $maxCategoryCount = max($maxCategoryCount, (int) $row['total']);
+}
 
 require_once 'header.php';
 ?>
 
-<h3 class="mb-4">Dashboard</h3>
-
-<div class="row g-3 mb-4">
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h6 class="text-muted mb-1">Total Active Announcements</h6>
-                <h2 class="mb-0"><?php echo $totalActive; ?></h2>
-            </div>
+<div class="stat-grid">
+    <section class="stat-card" aria-label="Total active announcements">
+        <span class="stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5h16v13H4zM4 9h16M8 13h8m-8 3h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <div>
+            <p class="stat-number"><?php echo $totalActive; ?></p>
+            <p class="stat-label">Total Active Announcements</p>
         </div>
-    </div>
+    </section>
 </div>
 
-<div class="card shadow-sm">
+<section class="card">
     <div class="card-body">
-        <h5 class="mb-3">Announcements by Category</h5>
-        <table class="table table-hover mb-0 align-middle">
-            <thead>
-                <tr>
-                    <th>Category</th>
-                    <th>Active Announcements</th>
-                </tr>
-            </thead>
-            <tbody>
+        <h2 class="h4 mb-3">Announcements by Category</h2>
+        <?php if (empty($byCategory)): ?>
+            <div class="empty-state py-4">
+                <p class="mb-0">Category totals will appear here when categories are available.</p>
+            </div>
+        <?php else: ?>
+            <div class="category-list">
                 <?php foreach ($byCategory as $row): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($row['category_name']); ?></td>
-                        <td><?php echo $row['total']; ?></td>
-                    </tr>
+                    <?php $barWidth = $maxCategoryCount > 0 ? ((int) $row['total'] / $maxCategoryCount) * 100 : 0; ?>
+                    <div class="category-row">
+                        <span class="category-name"><?php echo htmlspecialchars($row['category_name']); ?></span>
+                        <div class="category-bar-track" role="img" aria-label="<?php echo htmlspecialchars($row['category_name']); ?>: <?php echo (int) $row['total']; ?> active announcements">
+                            <div class="category-bar" style="width: <?php echo $barWidth; ?>%;"></div>
+                        </div>
+                        <span class="category-count"><?php echo (int) $row['total']; ?></span>
+                    </div>
                 <?php endforeach; ?>
-            </tbody>
-        </table>
+            </div>
+        <?php endif; ?>
     </div>
-</div>
+</section>
 
 <?php require_once 'footer.php'; ?>
